@@ -190,8 +190,7 @@
 
     <header>
         <h1>
-            <img src="img/logo.png" alt="Tamotty Logo"
-                style="width: 82px; height: 82px; vertical-align: middle;" />
+            <img src="img/logo.png" alt="Tamotty Logo" style="width: 82px; height: 82px; vertical-align: middle;" />
             Tamotty Studio
         </h1>
         <nav>
@@ -228,7 +227,6 @@
         </div>
     </section>
 
-
     <section id="projects">
         <h2>🎮 Our Projects</h2>
         <div class="projects">
@@ -249,11 +247,12 @@
 
     <section id="contact">
         <h2>📬 Contact Us</h2>
-        <form action="https://formspree.io/f/YOUR_EMAIL_ID" method="POST">
-            <input type="text" name="name" placeholder="Your Name" required />
-            <input type="email" name="_replyto" placeholder="Your Email" required />
+        <form id="contact-form">
+            <input type="text" name="from_name" placeholder="Your Name" required />
+            <input type="email" name="reply_to" placeholder="Your Email" required />
+            <input type="text" name="title" placeholder="Subject / Title" required />
             <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-            <button type="submit" onclick="playSound()">Send Message 🚀</button>
+            <button type="submit">Send Message 🚀</button>
         </form>
     </section>
 
@@ -263,10 +262,37 @@
 
     <!-- Optional sound effect -->
     <audio id="clickSound" src="https://freesound.org/data/previews/341/341695_6262526-lq.mp3"></audio>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
+        // Initialize EmailJS with your public key
+        (function () {
+            emailjs.init("3KhEqKwFIdzrAWzZo"); // Replace with your actual key
+        })();
+
+        // Play a sound
         function playSound() {
-            document.getElementById("clickSound").play();
+            const sound = document.getElementById("send-sound");
+            if (sound) sound.play();
         }
+
+        // Handle form submission
+        document.getElementById("contact-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            emailjs.sendForm('service_tos4ufn', 'template_hofg06e', this)
+                .then(() => {
+                    // Send auto-reply to user
+                    return emailjs.sendForm('service_tos4ufn', 'template_4n99gpd', this);
+                })
+                .then(() => {
+                    playSound();
+                    alert("Thanks for reaching out! We'll get back to you 🐾");
+                    this.reset();
+                })
+                .catch(err => {
+                    alert('Oops, something went wrong: ' + err.text);
+                });
+        });
     </script>
 
 </body>
